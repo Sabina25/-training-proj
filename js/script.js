@@ -290,6 +290,57 @@
         }, 4000);
     }
 
+    //SLIDE-1
+
+    const slides = document.querySelectorAll('.offer__slide'),
+          btnNext = document.querySelector('.offer__slider-next'),
+          btnPrev = document.querySelector('.offer__slider-prev'),
+          curSlide = document.querySelector('#current'),
+          totalSlider = document.querySelector('#total');
+
+    let slideIndex = 1;
+
+    showSlides(slideIndex);
+
+    if(slides.length < 10 ) {
+        totalSlider.textContent = `0${slides.length}`;
+    } else {
+        totalSlider.textContent =`${slides.length}`;
+    }
+
+    function showSlides(n) {
+        if (n < 1 ){
+            slideIndex = slides.length;
+        }
+
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        slides.forEach (item => item.style.display = 'none');
+
+        slides[slideIndex - 1].style.display = 'block';
+
+        if(slides.length < 10 ) {
+            curSlide.textContent = `0${slideIndex}`;
+        } else {
+            totalSlider.textContent =`${slideIndex}`;
+        }
+    }
+
+    function plusSlides (n) {
+        showSlides(slideIndex += n);
+    }
+
+    btnNext.addEventListener ('click', () => {
+        plusSlides(1);
+    })
+
+    btnPrev.addEventListener('click', () => {
+        plusSlides(-1);
+    })
+
+
 });
 
 
