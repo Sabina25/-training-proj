@@ -290,7 +290,7 @@
         }, 4000);
     }
 
-    //SLIDE-1
+    //SLIDE
 
     const slides = document.querySelectorAll('.offer__slide'),
           btnNext = document.querySelector('.offer__slider-next'),
@@ -300,44 +300,123 @@
 
     let slideIndex = 1;
 
-    showSlides(slideIndex);
+    // SIMPLE SLIDER
+
+
+    // showSlides(slideIndex);
+
+    // if(slides.length < 10 ) {
+    //     totalSlider.textContent = `0${slides.length}`;
+    // } else {
+    //     totalSlider.textContent =`${slides.length}`;
+    // }
+
+    // function showSlides(n) {
+    //     if (n < 1 ){
+    //         slideIndex = slides.length;
+    //     }
+
+    //     if (n > slides.length) {
+    //         slideIndex = 1;
+    //     }
+
+    //     slides.forEach (item => item.style.display = 'none');
+
+    //     slides[slideIndex - 1].style.display = 'block';
+
+    //     if(slides.length < 10 ) {
+    //         curSlide.textContent = `0${slideIndex}`;
+    //     } else {
+    //         totalSlider.textContent =`${slideIndex}`;
+    //     }
+    // }
+
+    // function plusSlides (n) {
+    //     showSlides(slideIndex += n);
+    // }
+
+    // btnNext.addEventListener ('click', () => {
+    //     plusSlides(1);
+    // })
+
+    // btnPrev.addEventListener('click', () => {
+    //     plusSlides(-1);
+    // })
+
+
+
+    //Carousel 
 
     if(slides.length < 10 ) {
         totalSlider.textContent = `0${slides.length}`;
-    } else {
+        curSlide.textContent = `0${slideIndex}`;
+    } else {            
         totalSlider.textContent =`${slides.length}`;
+        curSlide.textContent = slideIndex;
     }
 
-    function showSlides(n) {
-        if (n < 1 ){
-            slideIndex = slides.length;
-        }
+    const slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+          slidesField = document.querySelector('.offer__slider_inner'),
+          width = window.getComputedStyle(slidesWrapper).width; //получение ширины 
 
-        if (n > slides.length) {
-            slideIndex = 1;
-        }
+    slidesField.style.width = 100 * slides.length + '%';  //ширина всего блока(слайдера) равная длине всех слайдов
+    
+    slidesField.style.display = 'flex';
+    slidesField.style.transition = '0.5s all';
 
-        slides.forEach (item => item.style.display = 'none');
+    slidesWrapper.style.overflow = 'hidden'; //скрывает все элементы, кот. не попадают в область видимости
 
-        slides[slideIndex - 1].style.display = 'block';
+    let offset = 0;
 
-        if(slides.length < 10 ) {
-            curSlide.textContent = `0${slideIndex}`;
-        } else {
-            totalSlider.textContent =`${slideIndex}`;
-        }
-    }
+    slides.forEach (item => {
+        item.style.width = width;
+    });
 
-    function plusSlides (n) {
-        showSlides(slideIndex += n);
-    }
+
 
     btnNext.addEventListener ('click', () => {
-        plusSlides(1);
+        if(offset == parseInt(width) * (slides.length - 1)) {
+            offset = 0;
+        } else {
+            offset +=parseInt(width);
+        }
+
+        slidesField.style.transform =`translateX(-${offset}px)`;
+
+        if (slideIndex == slides.length) {
+            slideIndex = 1;
+        } else {
+            slideIndex +=1;
+        }
+        
+        if(slides.length < 10) {
+            curSlide.textContent = `0${slideIndex}`;
+        } else {
+            curSlide.textContent = slideIndex;
+        }
     })
 
-    btnPrev.addEventListener('click', () => {
-        plusSlides(-1);
+    btnPrev.addEventListener ('click', () => {
+        if(offset == 0 ) {
+            offset =  parseInt(width) * (slides.length - 1);
+        } else {
+            offset -=parseInt(width);
+        }
+
+        slidesField.style.transform =`translateX(-${offset}px)`;
+
+        if (slideIndex == 1) {
+            slideIndex = slides.length;
+        } else {
+            slideIndex -=1;
+        }
+
+        if(slides.length < 10) {
+            curSlide.textContent = `0${slideIndex}`;
+        } else {
+            curSlide.textContent = slideIndex;
+        }
+
     })
 
 
