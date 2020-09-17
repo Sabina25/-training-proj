@@ -368,11 +368,58 @@
 
     let offset = 0;
 
+    const slider = document.querySelector('.offer__slider');
+
     slides.forEach (item => {
         item.style.width = width;
     });
 
+    slider.style.position = 'relative';
 
+    const dots = document.createElement('ol'),
+          dotsArr = [];
+    dots.classList.add('carousel-indicators');
+    dots.style.cssText = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: flex;
+        justify-content: center;
+        margin-right: 15%;
+        margin-left: 15%;
+        list-style: none;
+    `;
+
+    slider.append(dots);
+
+    for (let i=0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i+1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 3px;
+            margin-left: 3px;
+            cursor: pointer;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
+        `;
+
+        if(i == 0) {
+            dot.style.opacity = 1;
+        }
+
+        dots.append(dot);
+        dotsArr.push(dot);
+    }
 
     btnNext.addEventListener ('click', () => {
         if(offset == parseInt(width) * (slides.length - 1)) {
@@ -394,6 +441,9 @@
         } else {
             curSlide.textContent = slideIndex;
         }
+
+        dotsArr.forEach (dot => dot.style.opacity ='.5');
+        dotsArr[slideIndex-1].style.opacity = '1';
     })
 
     btnPrev.addEventListener ('click', () => {
@@ -417,8 +467,103 @@
             curSlide.textContent = slideIndex;
         }
 
+        dotsArr.forEach (dot => dot.style.opacity ='.5');
+        dotsArr[slideIndex-1].style.opacity = '1';
+
     })
 
+    dotsArr.forEach (dot => {
+        dot.addEventListener('click', (e) => {
+            const slideTo = e.target.getAttribute('data-slide-to');
+
+            slideIndex = slideTo;
+            offset = parseInt(width) * (slideTo-1);
+            
+            slidesField.style.transform =`translateX(-${offset}px)`;
+
+            if(slides.length < 10) {
+                curSlide.textContent = `0${slideIndex}`;
+            } else {
+                curSlide.textContent = slideIndex;
+            }
+
+            dotsArr.forEach (dot => dot.style.opacity ='.5');
+            dotsArr[slideIndex-1].style.opacity = '1';
+
+        })
+    })
+
+    //calc
+
+    const result = document.querySelector(".calculating__result");
+    let sex="female", height, weight, age, radio="1.375 ";
+
+    function calcTotal() {
+        if(!sex || !height || !weight || !age || !radio){
+            result.textContent = '____';
+            return;
+        }
+
+        if (sex === "female"){
+            result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * radio);
+        } else {
+            result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * radio);
+        }
+    }
+
+    calcTotal();
+
+    function getStaticInform (parentSelector, activeClass) {
+        const element = document.querySelectorAll(`${parentSelector} div`);
+
+        element.forEach( el => {
+            el.addEventListener('click', (e) => {
+                if(e.target.getAttribute('data-radio')){
+                    radio = e.target.getAttribute('data-radio');
+                } else {
+                    sex = e.target.getAttribute('id');
+                }
+    
+                console.log(radio, sex);
+    
+                element.forEach(el => {
+                    el.classList.remove(activeClass);
+                });
+    
+                e.target.classList.add(activeClass);
+    
+                calcTotal();
+            });
+        });
+    }
+
+    getStaticInform('#gender', 'calculating__choose-item_active');
+    getStaticInform('.calculating__choose_big', 'calculating__choose-item_active');
+
+    function getDinamicInform(selector) {
+        const input = document.querySelector(selector);
+
+        input.addEventListener('input', () => {
+            switch (input.getAttribute('id')){
+                case 'height':
+                    height = +input.value;
+                    break;
+                case 'weight': 
+                    weight = +input.value;
+                    break;
+                case 'age': 
+                    age = +input.value;
+                    break;
+            }
+
+            calcTotal();
+        });
+
+    }
+
+    getDinamicInform('#height');
+    getDinamicInform('#weight');
+    getDinamicInform('#age');
 
 });
 
