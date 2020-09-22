@@ -1,8 +1,10 @@
+import {getResource} from '../services/services';
+
 function carts (){
     class MenuCard {
         constructor (src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
-            this.alt = alt;
+            this. alt = alt;
             this.title = title;
             this.descr = descr;
             this.price = price;
@@ -41,15 +43,7 @@ function carts (){
         }
     }
 
-    const getResource = async (url) => {
-        const res = await  fetch(url);
-
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
-
-        return await res.json();
-    };
+   
 
     // getResource('http://localhost:3000/menu')
     //     .then(data => {
@@ -67,4 +61,4 @@ function carts (){
 
 }
 
-module.exports = carts;
+export default carts;

@@ -1,43 +1,47 @@
-function modal (){
-    const btns = document.querySelectorAll('[data-modal]');
-    const modal = document.querySelector('.modal');
-    
+function openModel(modalSelector, modalTimerId) {
+    const modal = document.querySelector(modalSelector);
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 
-    function openModel() {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        //clearInterval(modalTimerId);
-    }
+    console.log(modalTimerId);
 
-    function closeModel() {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+    if (modalTimerId) {
+        clearInterval(modalTimerId);
     }
+}
+
+function closeModel(modalSelector) {
+    const  modal = document.querySelector(modalSelector);
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function modal (triggerSelector, modalSelector, modalTimerId){
+    const btns = document.querySelectorAll(triggerSelector);
+    const modal = document.querySelector(modalSelector);
 
     btns.forEach (btn => {
         btn.addEventListener('click', () => {
-            openModel();
+            openModel(modalSelector);
         });
     });
 
 
     modal.addEventListener('click', (e) => {
         if (e.target === modal || e.target.getAttribute('data-close')=='') {
-            closeModel();
+            closeModel(modalSelector);
         }
     });
 
     document.addEventListener ('keydown', (e) => {
         if (e.code === 'Escape' && modal.style.display == "block") {
-            closeModel();
+            closeModel(modalSelector, modalTimerId);
         }
     });
 
-    //const modalTimerId = setTimeout (openModel, 2000);
-
     function showModalByScroll () {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            openModel();
+            openModel(modalSelector, modalTimerId);
             window.removeEventListener('scroll', showModalByScroll);
         }
     }
@@ -46,4 +50,6 @@ function modal (){
 
 }
 
-module.exports = modal;
+export default modal;
+export {closeModel};
+export {openModel};
